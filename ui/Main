@@ -1,16 +1,25 @@
 package ui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Stack;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import symbols.Rectangle;
+import symbols.Symbols;
+import symbols.SymbolsShpes;
 
 public class Main extends Application {
 
-	private Stage primaryStage;
+	private static Stage primaryStage;
 	private BorderPane mainLayout;
 
 	@Override
@@ -27,13 +36,31 @@ public class Main extends Application {
 		mainLayout = loader.load();
 		Scene scene=new Scene(mainLayout);
 		primaryStage.setScene(scene);
+		ArrayList<Symbols> l = new ArrayList<>();
+		l.add(new Rectangle(100,100));
+		Sketchpad k = new Sketchpad(500, 600, l);
+//		k.setSketchpad();
+//		
 		primaryStage.show();
 	}
+	
+	
+	private static  Stack<Scene> StageStack = new Stack<Scene>(); 
 
 	public static void setScene(Scene scene) {
-		
+		primaryStage.setScene(scene);
+		StageStack.add(scene);
 	}
 	
+	public static void backToLastScene() {
+		if(!StageStack.isEmpty()) {
+			Scene scene = StageStack.peek();
+			primaryStage.setScene(scene);
+		}else {
+			//doing nothing
+		}
+	
+	}
 	public static void main(String[] args) {
 		launch(args);
 	}
