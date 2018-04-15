@@ -10,6 +10,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Shape;
+import symbols.RectangleS;
 import symbols.Symbols;
 
 public class Sketchpad {
@@ -22,13 +25,17 @@ public class Sketchpad {
 		this.symbolsList = l;
 	}
 
-	public void setSketchpad() {
+	public void setSketchpad(Scene scene) {
 		Group root = new Group();
-		Scene scene = new Scene(root, width, height);
+//		Scene scene = new Scene(root, width, height);
 		Main.setScene(scene);
 		Canvas canvas = new Canvas(width, height);
 		GraphicsContext gc;
 		gc = canvas.getGraphicsContext2D();
+//		Pane pane = new Pane();
+//		RectangleS rec = new RectangleS();
+//		root.getChildren().add(rec);
+//		
 		for (Symbols s : symbolsList) {
 
 			switch (s.getType()) {// 判断他是什么形状
@@ -37,7 +44,8 @@ public class Sketchpad {
 
 				break;
 			case 2:
-				gc.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
+//				gc.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
+				gc.strokeRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
 				break;
 			case 3:
 				break;
@@ -59,6 +67,7 @@ public class Sketchpad {
 			}
 		}
 		root.getChildren().add(canvas);
+//		Main.setScene(scene);
 
 
 	}
