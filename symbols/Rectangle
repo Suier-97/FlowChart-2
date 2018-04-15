@@ -13,6 +13,8 @@ public class Rectangle extends Symbols {
 		type = 2;
 		this.x = x - width / 2;
 		this.y = y + height / 2;
+		this.width = 200;
+		this.height =100;
 	}
 
 	@Override
