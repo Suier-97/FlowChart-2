@@ -1,0 +1,84 @@
+package symbols;
+
+public abstract class Symbols {
+	double x, y;// 边框的坐标
+	double width, height;// 边框的长宽
+	String content;
+	int type;
+	boolean ifElected = false;// 默认没被选中
+
+	boolean isSelect(double x, double y) { // 传入鼠标坐标判断是否被选中
+		ifElected = false;
+		if (x >= this.x && x <= this.x + width) {
+			if (y <= this.y && y >= y - height) {
+				ifElected = true;
+			}
+		}
+		
+		return ifElected;
+	}
+	
+	void draw() {//每个图标都要能被画出来
+		
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public double getWidth() {
+		return width;
+	}
+
+	public void setWidth(double width) {
+		this.width = width;
+	}
+
+	public double getHeight() {
+		return height;
+	}
+
+	public void setHeight(double height) {
+		this.height = height;
+	}
+	
+	
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public boolean isIfElected() {
+		return ifElected;
+	}
+
+	public void setIfElected(boolean ifElected) {
+		this.ifElected = ifElected;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+	
+	
+}
