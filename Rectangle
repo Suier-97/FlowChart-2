@@ -1,0 +1,38 @@
+package symbols;
+
+import com.sun.prism.paint.Color;
+
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+public class Rectangle extends Symbols {
+	Text text = new Text();
+
+	public Rectangle(double x, double y) {// 默认是将画板的中心坐标返回
+		type = 2;
+		this.x = x - width / 2;
+		this.y = y + height / 2;
+	}
+
+	@Override
+	boolean isSelect(double x, double y) {
+
+		return super.isSelect(x, y);
+	}
+
+	void setText() {
+		text.setText(content);
+		text.setFont(Font.font("Verdana", 20));
+		text.setX(x);
+		text.setY(y);// 设置文本的原点，矩形的原点就是矩形的左上角
+		text.setWrappingWidth(width);// 文本宽度限制
+	}
+
+	@Override
+	void draw() {
+
+		super.draw();
+	}
+
+}
