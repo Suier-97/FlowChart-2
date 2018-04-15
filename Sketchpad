@@ -1,0 +1,65 @@
+package ui;
+
+import java.util.ArrayList;
+
+import javax.security.auth.kerberos.KerberosKey;
+
+import com.sun.javafx.scene.control.skin.SeparatorSkin;
+
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import symbols.Symbols;
+
+public class Sketchpad {
+	ArrayList<Symbols> symbolsList;
+	double width, height;// 画板的长宽
+
+	public Sketchpad(double width, double height, ArrayList<Symbols> l) {
+		this.width = width;
+		this.height = height;
+		this.symbolsList = l;
+	}
+
+	public void setSketchpad() {
+		Group root = new Group();
+		Scene scene = new Scene(root, width, height);
+		Main.setScene(scene);
+		Canvas canvas = new Canvas(width, height);
+		GraphicsContext gc;
+		gc = canvas.getGraphicsContext2D();
+		for (Symbols s : symbolsList) {
+
+			switch (s.getType()) {// 判断他是什么形状
+			case 1:
+				gc.fillRoundRect(s.getX(), s.getHeight(), s.getWidth(), s.getHeight(), 20, 20);// 画一个圆角矩形
+
+				break;
+			case 2:
+				gc.fillRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				break;
+			case 6:
+				break;
+			case 7:
+				break;
+			case 8:
+				break;
+			default:
+				break;
+			}
+			if (s.isIfElected()) {
+				// 画出操作框
+			}
+		}
+		root.getChildren().add(canvas);
+
+
+	}
+}
