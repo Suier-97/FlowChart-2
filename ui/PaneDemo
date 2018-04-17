@@ -17,6 +17,7 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import symbols.RRectangle;
 import symbols.Rectangle;
+import symbols.RoundRectangle;
 import symbols.Symbols;
 
 public class PaneDemo extends Application {
@@ -39,8 +40,18 @@ public class PaneDemo extends Application {
 		Scene scene = new Scene(mainLayout);
 		Pane pane = (Pane) mainLayout.getCenter();
 		RRectangle r = new RRectangle(100, 40);
+		RoundRectangle r2 = new RoundRectangle(100, 40);
 		r.draw(pane);
-		
+		pane.getChildren().addAll(r, r2);
+		if (r2.isElected()) {
+			pane.getChildren().add(r2.getControl());
+		}
+		if (r.isElected()) {
+			pane.getChildren().add(r.getControl());
+		}
+		r.draw(pane);
+		r2.draw(pane);
+
 		primaryStage.setScene(scene);
 		// ArrayList<Symbols> l = new ArrayList<>();
 		// l.add(new Rectangle(100,100));
