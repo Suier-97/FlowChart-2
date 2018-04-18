@@ -1,0 +1,146 @@
+package symbols;
+
+import javafx.scene.Cursor;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.Cursor;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+
+public class RoundRectangle extends Rectangle {
+	private boolean isElected = false;// 选中状态，默认没被选中
+	private Text text; // 文本框
+	private int type; // 图形类型
+	private Rectangle control = new Rectangle();
+
+	public void draw(Pane pane) {
+		this.setY((pane.getPrefHeight() - this.getHeight()) / 2);
+		this.setX((pane.getPrefWidth() - this.getWidth()) / 2);
+		// pane.getChildren().add(this);
+
+	}
+
+	// 画出判断框（未完善）
+	private void drawElectBox() {
+//		System.out.println(isElected);
+		if (isElected) {
+
+			control.setX(this.getX() - 10);
+			control.setY(this.getY() - 10);
+			control.setWidth(this.getWidth() + 20);
+			control.setHeight(this.getHeight() + 20);
+			control.setStroke(Color.GREEN);
+			control.setStrokeWidth(1.3);
+			control.setFill(null);
+			// pane.getChildren().add(control);
+		}
+	}
+
+	private void initialize() {
+		this.setArcHeight(15);
+		this.setArcWidth(15);
+		this.setCursor(Cursor.HAND);
+		this.setStroke(Color.BLACK);
+		this.setFill(Color.WHITE);
+		this.setStrokeWidth(1.3);
+		this.setOnMouseClicked(e -> {
+			this.isElected = true;
+			drawElectBox();
+		});
+		this.setOnMouseDragged(e -> {
+			drawElectBox();
+			this.setX(e.getX() - this.getWidth() / 2);
+			this.setY(e.getY() - this.getHeight() / 2);
+		});
+	}
+
+	/**
+	 * RoundRectangle构造方法
+	 */
+	public RoundRectangle() {
+		super();
+		initialize();
+	}
+
+	/**
+	 * RoundRectangle构造方法
+	 * 
+	 * @param width
+	 *            圆角矩形的宽
+	 * @param height
+	 *            圆角矩形的长
+	 */
+	public RoundRectangle(double width, double height) {
+		super(width, height);
+		initialize();
+	}
+
+	/**
+	 * RoundRectangle构造方法
+	 * 
+	 * @param x
+	 *            圆角矩形左上角的x坐标
+	 * @param y
+	 *            圆角矩形左上角的y坐标
+	 * @param width
+	 *            圆角矩形的宽
+	 * @param height
+	 *            圆角矩形的长
+	 */
+	public RoundRectangle(double x, double y, double width, double height) {
+		super(x, y, width, height);
+		initialize();
+	}
+
+	/**
+	 * RoundRectangle构造方法
+	 * 
+	 * @param width
+	 *            矩形的宽
+	 * @param height
+	 *            矩形的长
+	 * @param text
+	 *            文本框
+	 */
+	public RoundRectangle(double width, double height, Text text) {
+		this(width, height);
+		this.text = text;
+		initialize();
+	}
+
+	// getters & setters
+	public boolean isElected() {
+		return isElected;
+	}
+
+	public void setElected(boolean isElected) {
+		this.isElected = isElected;
+	}
+
+	public Text getText() {
+		return text;
+	}
+
+	public void setText(Text text) {
+		this.text = text;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public Rectangle getControl() {
+		return control;
+	}
+
+	public void setControl(Rectangle control) {
+		this.control = control;
+	}
+}
