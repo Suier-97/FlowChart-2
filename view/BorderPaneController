@@ -1,0 +1,55 @@
+package view;
+
+import javafx.fxml.FXML;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
+import symbols.Diamond;
+import symbols.RRectangle;
+import symbols.RoundRectangle;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+
+public class BorderPaneController {
+	@FXML
+	private Pane pane;
+	@FXML
+	private Rectangle rectangle; // 矩形
+	@FXML
+	private Rectangle roundRect; // 圆角矩形
+	@FXML
+	private Path diamond; // 菱形
+	@FXML
+	private Path parallelogram; // 平行四边形
+	@FXML
+	private Line line; // 实线
+	@FXML
+	private Circle circle; // 圆
+	@FXML
+	private Path curveRect; // 曲线矩形
+
+	@FXML
+	private void drawRect() {
+		RRectangle rect = new RRectangle(100, 40);
+		rect.setY((pane.getPrefHeight() - rect.getHeight()) / 2);
+		rect.setX((pane.getPrefWidth() - rect.getWidth()) / 2);
+		pane.getChildren().add(rect);
+	}
+
+	@FXML
+	private void drawRoundRect() {
+		RoundRectangle roundRect = new RoundRectangle(100, 40);
+		roundRect.setY((pane.getPrefHeight() - roundRect.getHeight()) / 2);
+		roundRect.setX((pane.getPrefWidth() - roundRect.getWidth()) / 2);
+		pane.getChildren().add(roundRect);
+	}
+
+	@FXML
+	private void drawDiamond() {
+		Diamond d = new Diamond(30.0,40.0,100.0,50.0);
+		d.setY((pane.getPrefHeight() - d.getHeight()) / 2);
+		d.setX((pane.getPrefWidth() - d.getWidth()) / 2);
+		pane.getChildren().add(d);
+	}
+}
