@@ -13,6 +13,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import symbols.RRectangle;
@@ -39,18 +41,29 @@ public class PaneDemo extends Application {
 		mainLayout = loader.load();
 		Scene scene = new Scene(mainLayout);
 		Pane pane = (Pane) mainLayout.getCenter();
-		RRectangle r = new RRectangle(100, 40);
-		RoundRectangle r2 = new RoundRectangle(100, 40);
-		r.draw(pane);
-		pane.getChildren().addAll(r, r2);
-		if (r2.isElected()) {
-			pane.getChildren().add(r2.getControl());
-		}
-		if (r.isElected()) {
-			pane.getChildren().add(r.getControl());
-		}
-		r.draw(pane);
-		r2.draw(pane);
+
+
+//		polygon.getPoints().addAll(new Double[]{
+//				100.0,100.0,
+//				200.0,100.0,
+//				195.0,98.0,
+//				195.0,102.0,
+//				200.0,100.0
+//				});
+//		polygon.setFill(Color.BLACK);
+//		pane.getChildren().add(polygon);
+//		RRectangle r = new RRectangle(100, 40);
+//		RoundRectangle r2 = new RoundRectangle(100, 40);
+//		r.draw(pane);
+//		pane.getChildren().addAll(r, r2);
+//		if (r2.isElected()) {
+//			pane.getChildren().add(r2.getControl());
+//		}
+//		if (r.isElected()) {
+//			pane.getChildren().add(r.getControl());
+//		}
+//		r.draw(pane);
+//		r2.draw(pane);
 
 		primaryStage.setScene(scene);
 		// ArrayList<Symbols> l = new ArrayList<>();
