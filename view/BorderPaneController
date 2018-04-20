@@ -5,9 +5,13 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import symbols.CCircle;
 import symbols.Diamond;
+import symbols.LLine;
+import symbols.Parallelogram;
 import symbols.RRectangle;
 import symbols.RoundRectangle;
+import javafx.scene.ParallelCamera;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -31,7 +35,9 @@ public class BorderPaneController {
 
 	@FXML
 	private void drawRect() {
-		RRectangle rect = new RRectangle(100, 40);
+		double width = 100;
+		double height = 40;
+		RRectangle rect = new RRectangle(width, height);
 		rect.setY((pane.getPrefHeight() - rect.getHeight()) / 2);
 		rect.setX((pane.getPrefWidth() - rect.getWidth()) / 2);
 		pane.getChildren().add(rect);
@@ -39,7 +45,9 @@ public class BorderPaneController {
 
 	@FXML
 	private void drawRoundRect() {
-		RoundRectangle roundRect = new RoundRectangle(100, 40);
+		double width = 100;
+		double height = 40;
+		RoundRectangle roundRect = new RoundRectangle(width, height);
 		roundRect.setY((pane.getPrefHeight() - roundRect.getHeight()) / 2);
 		roundRect.setX((pane.getPrefWidth() - roundRect.getWidth()) / 2);
 		pane.getChildren().add(roundRect);
@@ -47,9 +55,45 @@ public class BorderPaneController {
 
 	@FXML
 	private void drawDiamond() {
-		Diamond d = new Diamond(30.0,40.0,100.0,50.0);
-		d.setY((pane.getPrefHeight() - d.getHeight()) / 2);
-		d.setX((pane.getPrefWidth() - d.getWidth()) / 2);
+		double width = 100.0;
+		double height = 50.0;
+		double x = (pane.getPrefWidth() - width) / 2;
+		double y = (pane.getPrefHeight() - height) / 2;
+		Diamond d = new Diamond(x, y, width, height);
 		pane.getChildren().add(d);
+	}
+
+	@FXML
+	private void drawParallelogram() {
+		double width = 115.0;
+		double height = 40.0;
+		double x = (pane.getPrefWidth() - width) / 2;
+		double y = (pane.getPrefHeight() - height) / 2;
+		Parallelogram p = new Parallelogram(x, y, width, height);
+		pane.getChildren().add(p);
+	}
+
+	@FXML
+	private void drawLine() {//未完善
+		double startX= (pane.getPrefWidth() - 100) / 2;
+		double startY= (pane.getPrefHeight() - 100) / 2;
+		double endX=startX+100;
+		double endY=startY;
+		LLine l=new LLine(startX, startY, endX, endY);
+		pane.getChildren().add(l);
+	}
+
+	@FXML
+	private void drawCircle() {
+		double radius = 10;
+		double centerX = (pane.getPrefWidth() - radius) / 2;
+		double centerY = (pane.getPrefHeight() - radius) / 2;
+		CCircle c=new CCircle(centerX, centerY, radius);
+		pane.getChildren().add(c);
+	}
+
+	@FXML
+	private void drawCurveRect() {
+
 	}
 }
