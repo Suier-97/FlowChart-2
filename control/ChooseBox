@@ -1,12 +1,8 @@
 package control;
 
-import java.util.ArrayList;
-
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public class ChooseBox extends Shape {
@@ -19,6 +15,7 @@ public class ChooseBox extends Shape {
 	private double cBoxY;
 	private double cBoxWidth;
 	private double cBoxHeight;
+	private double offset = 10;// 偏移量
 
 	private Line cBox[] = new Line[5];
 
@@ -41,18 +38,10 @@ public class ChooseBox extends Shape {
 	 * 表示要将操作框画出来offset为偏移量
 	 */
 	public void draw(double x, double y, double width, double height) {
-		double offset = 10;
 		cBoxX = x - offset;
 		cBoxY = y - offset;
 		cBoxWidth = width + offset * 2;
 		cBoxHeight = height + offset * 2;
-
-		// cBox.setX(cBoxX);
-		// cBox.setY(cBoxY);
-		// cBox.setWidth(cBoxWidth);
-		// cBox.setHeight(cBOxHeight);
-		// cBox.setStroke(Color.BLACK);
-		// cBox.setFill(null);
 
 		for (int i = 0; i < 5; i++) {
 			if (i == 4) {
@@ -84,13 +73,10 @@ public class ChooseBox extends Shape {
 			} else {
 				cBox[i].setEndY(cBoxY);
 			}
-
-			// pane.getChildren().add(cBox[i]);
-
 		}
 
 		for (int i = 0; i < 9; i++) {
-			circles[i].setRadius(offset/2);
+			circles[i].setRadius(offset / 2);
 			circles[i].setFill(Color.WHITE);
 			circles[i].setStroke(Color.BLACK);
 			if (i == 0 || i == 3 || i == 5) { // 定x值
@@ -115,33 +101,6 @@ public class ChooseBox extends Shape {
 
 	}
 
-	// public double[] Zoom() {
-	// double parameter[] = new double[4];
-	//
-	// for (int i =0; i < 9; i++) {
-	// circles[i].setOnMouseDragged(e->{
-	// if(i==0||i==3||i==5) {
-	// cBoxX=e.getX();
-	// }
-	// if(i==0||i==1||i==2) {
-	// cBoxY=e.getY();
-	// }
-	// if(i==0||i==2||i==3||i==5||i==7) {
-	// cBoxWidth = cBoxWidth + circles[i].getCenterX() - e.getX();
-	// }
-	// if(i==0||i==2||i==1||i==5||i==7) {
-	// cBoxHeight=cBoxHeight + circles[i].getCenterY()-e.getY();
-	// }
-	// });
-	// }
-	// parameter[0]=cBoxX;
-	// parameter[1]=cBoxY;
-	// parameter[2]=cBoxWidth;
-	// parameter[3]=cBoxHeight;
-	// return parameter;
-	//
-	// }
-
 	public Line[] getcBox() {
 		return cBox;
 	}
@@ -153,6 +112,10 @@ public class ChooseBox extends Shape {
 	@Override
 	public com.sun.javafx.geom.Shape impl_configShape() {
 		return null;
+	}
+
+	public double getOffset() {
+		return offset;
 	}
 
 }
