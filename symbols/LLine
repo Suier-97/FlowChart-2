@@ -1,0 +1,67 @@
+package symbols;
+
+import control.ChooseBox;
+import javafx.scene.Cursor;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
+import javafx.scene.text.Text;
+/**
+ * LLine类
+ * @author suisui
+ *
+ */
+public class LLine extends Polygon {
+	private boolean isElected = true; // 选中状态，默认没被选中
+	private Text text; // 文本框
+	private int type; // 图形类型
+	private double startX = 0;
+	private double startY = 0;
+	private double endX = 0;
+	private double endY = 0;
+	private double length;
+	private Double[] points;
+	private ChooseBox cBox = new ChooseBox();
+
+	private void initialize() {
+		updatePoints();
+		this.setCursor(Cursor.HAND);
+		this.setStroke(Color.BLACK);
+		this.setFill(Color.WHITE);
+		this.setStrokeWidth(2.5);
+		this.setOnMouseDragged(e -> {
+			startX = e.getX() - length / 2;
+			startY = e.getY();
+			updatePoints();
+			this.getPoints().addAll(points);
+		});
+	}
+
+	private void updatePoints() {
+		this.getPoints().clear();
+		points = new Double[] { startX, startY, endX - 1, startY, endX - 3, endY - 2, endX, endY, endX - 3, endY + 2,
+				endX - 1, startY };
+	}
+
+	/**
+	 * LLine构造函数
+	 * 
+	 * @param startX
+	 *            直线开始的x坐标
+	 * @param startY
+	 *            直线开始的y坐标
+	 * @param endX
+	 *            直线结束的x坐标
+	 * @param endY
+	 *            直线结束的y坐标
+	 */
+	public LLine(double startX, double startY, double endX, double endY) {
+		this.startX = startX;
+		this.startY = startY;
+		this.endX = endX;
+		this.endY = endY;
+		this.length = Math.sqrt((startY - startX) * (startY - startX) + (endX - endY) * (endX - endY));
+		this.initialize();
+		super.getPoints().addAll(points);
+	}
+
+}
