@@ -42,109 +42,86 @@ public class RoundRectangle extends Rectangle {
 	// 画出判断框（未完善）
 
 	private void drawElectBox() {
-
-		// System.out.println(isElected);
-
-		if (isElected) {
-			Circle circles[] = cBox.getCircles();
-			circles[0].setOnMouseDragged(e -> {
+		isElected =true;
+		
+		Circle circles[] = cBox.getCircles();
+		circles[0].setOnMouseDragged(e -> {
+			if(e.getX()<circles[7].getCenterX()) {
 				this.setWidth(circles[0].getCenterX() - e.getX() + this.getWidth());
-				this.setHeight(circles[0].getCenterY() - e.getY() + this.getHeight());
-				if (e.getX() < circles[2].getCenterX()) {// 因为此时的2的x值和7的y值是不变的
-					this.setX(e.getX() + cBox.getOffset());
-				} else {
-					this.setX(circles[2].getCenterX());
-					this.setWidth(0);
-				}
-				if (e.getY() < circles[7].getCenterY()) {
-					this.setY(e.getY() + cBox.getOffset());
-				} else {
-					this.setY(circles[7].getCenterY() + cBox.getOffset());
-					this.setHeight(0);
-				}
-				cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-			});
-
-			circles[1].setOnMouseDragged(e -> {
-				this.setHeight(circles[1].getCenterY() - e.getY() + this.getHeight());
-				if (e.getY() < circles[7].getCenterY()) {
-					this.setY(e.getY() + cBox.getOffset());
-				} else {
-					this.setY(circles[7].getCenterY() + cBox.getOffset());
-					this.setHeight(0);
-				}
-				cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-			});
-			
-			circles[2].setOnMouseDragged(e -> {
-				this.setWidth(e.getX() - circles[2].getCenterX() + this.getWidth());
-				this.setHeight(circles[2].getCenterY() - e.getY() + this.getHeight());
-				if (e.getX() < circles[0].getCenterX()) {
-					this.setWidth(0);
-				}
-				if (e.getY() < circles[7].getCenterY()) {
-					this.setY(e.getY() + cBox.getOffset());
-				} else {
-					this.setHeight(0);
-				}
-				cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-			});
-			circles[3].setOnMouseDragged(e -> {
-				this.setWidth(circles[3].getCenterX() - e.getX() + this.getWidth());
-				if (e.getX() < circles[2].getCenterX()) {
-					this.setX(e.getX() + cBox.getOffset());
-				} else {
-					this.setWidth(0);
-				}
-				cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-			});
-
-			circles[4].setOnMouseDragged(e -> {
-				this.setWidth(e.getX() - circles[4].getCenterX() + this.getWidth());
-				if (e.getX() < circles[0].getCenterX()) {
-					this.setWidth(0);
-				}
-				cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-			});
-
-			circles[5].setOnMouseDragged(e -> {
-				this.setWidth(circles[5].getCenterX() - e.getX() + this.getWidth());
-				this.setHeight(e.getY() - circles[5].getCenterY() + this.getHeight());
-				if (e.getX() < circles[2].getCenterX()) {
-					this.setX(e.getX() + cBox.getOffset());
-				} else {
-					this.setWidth(0);
-				}
-				if (e.getY() < circles[2].getCenterY()) {
-					this.setHeight(0);
-				}
-				cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-			});
-
-			circles[6].setOnMouseDragged(e -> {
-				this.setHeight(e.getY() - circles[6].getCenterY() + this.getHeight());
-				if (e.getY() < circles[0].getCenterY()) {
-					this.setHeight(0);
-				}
-				cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-			});
-
-			circles[7].setOnMouseDragged(e -> {
-				this.setWidth(e.getX() - circles[7].getCenterX() + this.getWidth());
-				this.setHeight(e.getY() - circles[7].getCenterY() + this.getHeight());
-				if (e.getX() < circles[0].getCenterX()) {
-					this.setWidth(0);
-				}
-				if (e.getY() < circles[0].getCenterY()) {
-					this.setHeight(0);
-				}
-				cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-			});
+				this.setX(e.getX()-circles[0].getCenterX()+this.getX());
+			}
+			if(e.getY()<circles[7].getCenterY()) {
+				this.setY(e.getY()-circles[0].getCenterY()+this.getY());
+				this.setHeight(circles[0].getCenterY()-e.getY()+this.getHeight());
+			}
 			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		});
 
-			// pane.getChildren().add(control);
+		circles[1].setOnMouseDragged(e -> {
+			if(e.getY()<circles[6].getCenterY()) {
+				this.setY(e.getY()-circles[1].getCenterY()+this.getY());
+				this.setHeight(circles[1].getCenterY()-e.getY()+this.getHeight());
+			}
+			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		});
 
-		}
+		circles[2].setOnMouseDragged(e -> {
+			if(e.getX()>circles[5].getCenterX()) {
+				this.setWidth(e.getX()-circles[2].getCenterX()+this.getWidth());
+			}
+			if(e.getY()<circles[5].getCenterY()) {
+				this.setY(e.getY()-circles[2].getCenterY()+this.getY());
+				this.setHeight(circles[2].getCenterY()-e.getY()+this.getHeight());
+			}
+			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		});
+		circles[3].setOnMouseDragged(e -> {
+			
+			if (e.getX() < circles[2].getCenterX()) {
+				this.setWidth(circles[3].getCenterX() - e.getX() + this.getWidth());
+				this.setX(e.getX()-circles[3].getCenterX()+this.getX());
+			}
+			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		});
+
+		circles[4].setOnMouseDragged(e -> {
+			
+			if (e.getX() > circles[3].getCenterX()) {
+				this.setWidth(e.getX() - circles[4].getCenterX() + this.getWidth());
+			}
+			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		});
+
+		circles[5].setOnMouseDragged(e -> {
+			if(e.getX()<circles[2].getCenterX()) {
+				this.setX(e.getX()-circles[5].getCenterX()+this.getX());
+				this.setWidth(circles[5].getCenterX()-e.getX()+this.getWidth());
+			}
+			if(e.getY()>circles[2].getCenterY()) {
+				this.setHeight(e.getY()-circles[5].getCenterY()+this.getHeight());
+			}
+			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		});
+
+		circles[6].setOnMouseDragged(e -> {
+			if(e.getY()>circles[1].getCenterY()) {
+				this.setHeight(e.getY()-circles[6].getCenterY()+this.getHeight());
+			}
+			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		});
+
+		circles[7].setOnMouseDragged(e -> {
+			if(e.getX()>circles[0].getCenterX()) {
+				this.setWidth(e.getX()-circles[7].getCenterX()+this.getWidth());
+			}
+			if(e.getY()>circles[0].getCenterY()) {
+				this.setHeight(e.getY()-circles[7].getCenterY()+this.getHeight());
+			}
+			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		});
+		cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+
+	
 
 	}
 
@@ -324,5 +301,4 @@ public class RoundRectangle extends Rectangle {
 		return cBox;
 	}
 
-	
 }
