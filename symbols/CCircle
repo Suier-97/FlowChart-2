@@ -97,111 +97,87 @@ public class CCircle extends Circle {
 		isElected = true;
 
 		Circle circles[] = cBox.getCircles();
-		circles[0].setOnMouseDragged(e -> {
-			this.setCenterX((e.getX()-circles[0].getCenterX())/2+this.getCenterX());
-			this.setCenterY(((e.getY() - circles[0].getCenterY())) / 2 + this.getCenterY());
-			if (e.getX() < circles[0].getCenterX() || e.getY() < circles[0].getCenterY()) {
-				this.setRadius(this.getRadius()
-						+ (distance(e.getX(), e.getY(), circles[0].getCenterX(), circles[0].getCenterY())) / 2);
-			} else if (e.getX() >= circles[2].getCenterX() || e.getY() >= circles[7].getCenterY()) {
-				this.setRadius(0);
-			} else {
-				this.setRadius(this.getRadius()
-						- (distance(e.getX(), e.getY(), circles[0].getCenterX(), circles[0].getCenterY())) / 2);
+		
+		circles[0].setOnMouseDragged(e->{
+			if(e.getX()<circles[7].getCenterX()||e.getY()<circles[7].getCenterY()) {
+				if(e.getX()<circles[7].getCenterX()&&e.getY()<circles[7].getCenterY()) {
+//					double width = circles[7].getCenterX()-e.getX();
+//					double height = circles[7].getCenterY()-e.getY();
+//					double a = width<height?width:height;
+//					this.setRadius(a/2);
+					this.setRadius((circles[7].getCenterX()-e.getX()<(circles[7].getCenterY()-e.getY())?
+							(circles[7].getCenterX()-e.getX())/2:(circles[7].getCenterY()-e.getY())/2));
+				}
+				
+
 			}
 			cBox.draw(this.getCenterX() - this.getRadius(), this.getCenterY() - this.getRadius(), this.getRadius() * 2,
 					this.getRadius() * 2);
-		});
 
+		});
 		circles[1].setOnMouseDragged(e -> {
-			this.setCenterY(this.getCenterY() + (e.getY() - circles[0].getCenterY()) / 2);
+			
 			if (e.getY() < circles[7].getCenterY()) {
+				this.setCenterY(this.getCenterY() + (e.getY() - circles[0].getCenterY()) / 2);
 				this.setRadius((circles[0].getCenterY() - e.getY()) / 2 + this.getRadius());
-			} else {
-				this.setRadius(0);
-			}
+			} 
 			cBox.draw(this.getCenterX() - this.getRadius(), this.getCenterY() - this.getRadius(), this.getRadius() * 2,
 					this.getRadius() * 2);
 
 		});
 
 		circles[2].setOnMouseDragged(e -> {
-			this.setCenterX((e.getX()-circles[2].getCenterX())/2+this.getCenterX());
-			this.setCenterY((e.getY() - circles[2].getCenterY()) / 2 + this.getCenterY());
-			if(e.getX()>circles[2].getCenterX()||e.getY()<circles[2].getCenterY()) {
-				this.setRadius(this.getRadius()+(distance(e.getX(), e.getY(), circles[2].getCenterX(), circles[2].getCenterY()))/2);
-			}else if(e.getX()<circles[0].getCenterX()||e.getY()>circles[7].getCenterY()) {
-				this.setRadius(0);
-			}else {
-				this.setRadius(this.getRadius()-(distance(e.getX(), e.getY(), circles[2].getCenterX(), circles[2].getCenterY()))/2);
+			if(e.getX()>circles[5].getCenterX()&&e.getY()<circles[5].getCenterY()) {
+				this.setRadius((e.getX()-circles[5].getCenterX()<(circles[5].getCenterY()-e.getY())?
+							(e.getX()-circles[5].getCenterX())/2:(circles[5].getCenterY()-e.getY())/2));
 			}
 			cBox.draw(this.getCenterX() - this.getRadius(), this.getCenterY() - this.getRadius(), this.getRadius() * 2,
 					this.getRadius() * 2);
 		});
 		
 		circles[3].setOnMouseDragged(e->{
-			this.setCenterX((e.getX()-circles[3].getCenterX())/2+this.getCenterX());
 			if(e.getX()<circles[4].getCenterX()) {
+				this.setCenterX((e.getX()-circles[3].getCenterX())/2+this.getCenterX());
 				this.setRadius((circles[3].getCenterX()-e.getX())/2+this.getRadius());
 
-			}else {
-				this.setRadius(0);
 			}
-			
 			cBox.draw(this.getCenterX() - this.getRadius(), this.getCenterY() - this.getRadius(), this.getRadius() * 2,
 					this.getRadius() * 2);
 		});
 		
 		circles[4].setOnMouseDragged(e->{
-			this.setCenterX((e.getX()-circles[4].getCenterX())/2+this.getCenterX());
+			
 			if(e.getX()>circles[3].getCenterX()) {
 				this.setRadius((e.getX()-circles[4].getCenterX())/2+this.getRadius());
-				
-			}else {
-				this.setRadius(0);
+				this.setCenterX((e.getX()-circles[4].getCenterX())/2+this.getCenterX());
 			}
 			cBox.draw(this.getCenterX() - this.getRadius(), this.getCenterY() - this.getRadius(), this.getRadius() * 2,
 					this.getRadius() * 2);
 		});
 		
 		circles[5].setOnMouseDragged(e->{
-			this.setCenterX((e.getX()-circles[5].getCenterX())/2+this.getCenterX());
-			this.setCenterY(((e.getY() - circles[5].getCenterY())) / 2 + this.getCenterY());
-			if (e.getX() < circles[5].getCenterX() || e.getY() > circles[5].getCenterY()) {
-				this.setRadius(this.getRadius()
-						+ (distance(e.getX(), e.getY(), circles[5].getCenterX(), circles[5].getCenterY())) / 2);
-			} else if (e.getX() > circles[2].getCenterX() || e.getY() < circles[2].getCenterY()) {
-				this.setRadius(0);
-			} else {
-				this.setRadius(this.getRadius()
-						- (distance(e.getX(), e.getY(), circles[5].getCenterX(), circles[5].getCenterY())) / 2);
+			if(e.getX()<circles[2].getCenterX()&&e.getY()>circles[2].getCenterY()) {
+				this.setRadius((circles[2].getCenterX()-e.getX())<(e.getY()-circles[2].getCenterY())?
+						(circles[2].getCenterX()-e.getX())/2:(e.getY()-circles[2].getCenterY())/2);
 			}
 			cBox.draw(this.getCenterX() - this.getRadius(), this.getCenterY() - this.getRadius(), this.getRadius() * 2,
 					this.getRadius() * 2);
 		});
 		
 		circles[6].setOnMouseDragged(e->{
-			this.setCenterY((e.getY()-circles[6].getCenterY())/2+this.getCenterY());
+		
 			if(e.getY()>circles[1].getCenterY()) {
+				this.setCenterY((e.getY()-circles[6].getCenterY())/2+this.getCenterY());
 				this.setRadius((e.getY()-circles[6].getCenterY())/2+this.getRadius());
-			}else {
-				this.setRadius(0);
 			}
 			cBox.draw(this.getCenterX() - this.getRadius(), this.getCenterY() - this.getRadius(), this.getRadius() * 2,
 					this.getRadius() * 2);
 		});
 		
 		circles[7].setOnMouseDragged(e->{
-			this.setCenterX((e.getX()-circles[7].getCenterX())/2+this.getCenterX());
-			this.setCenterY(((e.getY() - circles[7].getCenterY())) / 2 + this.getCenterY());
-			if (e.getX() > circles[7].getCenterX() || e.getY() > circles[7].getCenterY()) {
-				this.setRadius(this.getRadius()
-						+ (distance(e.getX(), e.getY(), circles[7].getCenterX(), circles[7].getCenterY())) / 2);
-			} else if (e.getX() < circles[0].getCenterX() || e.getY() < circles[0].getCenterY()) {
-				this.setRadius(0);
-			} else {
-				this.setRadius(this.getRadius()
-						- (distance(e.getX(), e.getY(), circles[7].getCenterX(), circles[7].getCenterY())) / 2);
+			if(e.getX()>circles[0].getCenterX()&&e.getY()>circles[0].getCenterY()) {
+				this.setRadius((e.getX()-circles[0].getCenterX())<(e.getY()-circles[0].getCenterY())?
+						(e.getX()-circles[0].getCenterX())/2:(e.getY()-circles[0].getCenterY())/2);
 			}
 			cBox.draw(this.getCenterX() - this.getRadius(), this.getCenterY() - this.getRadius(), this.getRadius() * 2,
 					this.getRadius() * 2);
