@@ -14,7 +14,7 @@
 
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.BorderPaneController">
 	<center>
-		<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="670.0" BorderPane.alignment="CENTER" />
+		<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#paneClicked" prefHeight="571.0" prefWidth="670.0" BorderPane.alignment="CENTER" />
 	</center>
    <top>
 		<MenuBar BorderPane.alignment="CENTER">
@@ -126,6 +126,9 @@
       								<Cursor fx:constant="HAND" />
       							</cursor>
       						</Path>
+                  <Button mnemonicParsing="false" onMouseClicked="#undo" text="撤销" />
+                  <Button mnemonicParsing="false" onMouseClicked="#redo" text="前进" />
+                  <Button mnemonicParsing="false" onMouseClicked="#delete" text="删除" />
       					</children>
       					<opaqueInsets>
       						<Insets />
