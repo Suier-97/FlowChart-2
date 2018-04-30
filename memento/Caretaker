@@ -1,0 +1,44 @@
+package memento;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Stack;
+
+import symbols.Symbol;
+
+public class Caretaker {
+	public ArrayList<Memento> states;
+	public int currentState=0;
+	
+	public Caretaker() {
+		states=new ArrayList<Memento>();
+		states.add(new Memento(new LinkedList()));
+	}
+	
+	public void add(Memento state) {
+		currentState++;
+		for(int i=states.size()-1;i>=currentState;i--) {
+			states.remove(i);
+		}
+		states.add(state);
+	}
+	
+	public LinkedList<Symbol> getUndo() {
+		states.get(0).getState().clear();
+		if(currentState>0) {
+			currentState--;
+			return states.get(currentState).getState();
+		}else {
+			return states.get(0).getState();
+		}
+	}
+	
+	public LinkedList<Symbol> getRedo() {
+		if(currentState<states.size()-1) {
+			currentState++;
+			return states.get(currentState).getState();
+		}else {
+			return states.get(states.size()-1).getState();
+		}
+	}
+}
