@@ -1,10 +1,18 @@
 package view;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import memento.Caretaker;
+import memento.Memento;
 import symbols.CCircle;
 import symbols.CurveRectangle;
 import symbols.Diamond;
@@ -12,7 +20,13 @@ import symbols.LLine;
 import symbols.Parallelogram;
 import symbols.RRectangle;
 import symbols.RoundRectangle;
+import symbols.Symbol;
+import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
+import javafx.scene.effect.Light.Point;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -34,6 +48,11 @@ public class BorderPaneController {
 	@FXML
 	private Path curveRect; // 曲线矩形
 
+	private boolean isElectedSymbols = false;
+	private LinkedList<Symbol> symbolList = new LinkedList<Symbol>();
+	private LinkedList<Shape> boxList = new LinkedList<Shape>();
+	private Caretaker caretaker = new Caretaker();
+
 	@FXML
 	private void drawRect() {
 		double width = 100;
@@ -41,16 +60,8 @@ public class BorderPaneController {
 		double x = (pane.getPrefWidth() - width) / 2;
 		double y = (pane.getPrefHeight() - height) / 2;
 		RRectangle rect = new RRectangle(x, y, width, height);
-		if(rect.isElected()) {
-			Line line[]=rect.getcBox().getcBox();
-			for(Line l:line) {
-				pane.getChildren().add(l);
-			}
-			Circle circles[]=rect.getcBox().getCircles();
-			for(Circle c:circles) {
-				pane.getChildren().add(c);
-			}
-		}
+		symbolList.add(rect);
+		caretaker.add(new Memento(symbolList));
 		pane.getChildren().add(rect);
 	}
 
@@ -61,16 +72,8 @@ public class BorderPaneController {
 		double x = (pane.getPrefWidth() - width) / 2;
 		double y = (pane.getPrefHeight() - height) / 2;
 		RoundRectangle roundRect = new RoundRectangle(x, y, width, height);
-		if(roundRect.isElected()) {
-			Line line[]=roundRect.getcBox().getcBox();
-			for(Line l:line) {
-				pane.getChildren().add(l);
-			}
-			Circle circles[]=roundRect.getcBox().getCircles();
-			for(Circle c:circles) {
-				pane.getChildren().add(c);
-			}
-		}
+		symbolList.add(roundRect);
+		caretaker.add(new Memento(symbolList));
 		pane.getChildren().add(roundRect);
 	}
 
@@ -81,16 +84,8 @@ public class BorderPaneController {
 		double x = (pane.getPrefWidth() - width) / 2;
 		double y = (pane.getPrefHeight() - height) / 2;
 		Diamond d = new Diamond(x, y, width, height);
-		if (d.isElected()) {
-			Line line[] = d.getcBox().getcBox();
-			for (Line l : line) {
-				pane.getChildren().add(l);
-			}
-			Circle circles[] = d.getcBox().getCircles();
-			for (Circle c : circles) {
-				pane.getChildren().add(c);
-			}
-		}
+		symbolList.add(d);
+		caretaker.add(new Memento(symbolList));
 		pane.getChildren().add(d);
 	}
 
@@ -101,16 +96,20 @@ public class BorderPaneController {
 		double x = (pane.getPrefWidth() - width) / 2;
 		double y = (pane.getPrefHeight() - height) / 2;
 		Parallelogram p = new Parallelogram(x, y, width, height);
+		symbolList.add(p);
+		caretaker.add(new Memento(symbolList));
 		pane.getChildren().add(p);
 	}
 
 	@FXML
-	private void drawLine() {// 未完善
+	private void drawLine() {
 		double startX = (pane.getPrefWidth() - 100) / 2;
 		double startY = (pane.getPrefHeight() - 100) / 2;
-		double endX = startX + 100;
+		double length = 150;
+		double endX = startX + length;
 		double endY = startY;
 		LLine l = new LLine(startX, startY, endX, endY);
+		symbolList.add(l);
 		pane.getChildren().add(l);
 	}
 
@@ -120,7 +119,10 @@ public class BorderPaneController {
 		double centerX = (pane.getPrefWidth() - radius) / 2;
 		double centerY = (pane.getPrefHeight() - radius) / 2;
 		CCircle c = new CCircle(centerX, centerY, radius);
+		symbolList.add(c);
+		caretaker.add(new Memento(symbolList));
 		pane.getChildren().add(c);
+
 	}
 
 	@FXML
@@ -130,6 +132,124 @@ public class BorderPaneController {
 		double startX = (pane.getPrefWidth() - width) / 2;
 		double startY = (pane.getPrefHeight() - height) / 2;
 		CurveRectangle cr = new CurveRectangle(startX, startY, width, height);
+		symbolList.add(cr);
+		caretaker.add(new Memento(symbolList));
 		pane.getChildren().add(cr);
+	}
+
+	@FXML
+	private void paneClicked(MouseEvent e) {
+		double x = e.getX();
+		double y = e.getY();
+		int index = findClickedElement(new Point2D(x, y));
+		isElectedSymbols = false;
+		if (index == -1) {// 没有被选中的图形
+			isElectedSymbols = false;
+			// 清除所有操作框
+			boxList.clear();
+			pane.getChildren().clear();
+			for (Symbol symbol : symbolList) {
+				pane.getChildren().add((Shape) symbol);
+			}
+		} else if (index == -2) {// 选中了操作框，当前处于操作阶段
+			if (isElectedSymbols) {
+				boxList.clear();
+				drawBox(symbolList.get(index));
+			}
+			isElectedSymbols = true;
+		} else {// 选中了图形
+			if (!isElectedSymbols) {
+				boxList.clear();
+				drawBox(symbolList.get(index));
+			}
+			isElectedSymbols = true;
+		}
+
+		pane.getChildren().clear();
+		pane.getChildren().addAll(boxList);
+		for (Symbol symbol : symbolList) {
+			pane.getChildren().add((Shape) symbol);
+		}
+
+	}
+
+	private void drawBox(Symbol symbol) {
+		if (symbol.isElected() && symbol instanceof LLine) {
+			Circle circles[] = symbol.getCircles();
+			for (Circle c : circles) {
+				// pane.getChildren().add(c);
+				boxList.add(c);
+			}
+		} else if (symbol.isElected()) {
+			Line line[] = symbol.getcBox().getcBox();
+			for (Line l : line) {
+				// pane.getChildren().add(l);
+				boxList.add(l);
+			}
+			Circle circles[] = symbol.getcBox().getCircles();
+			for (Circle c : circles) {
+				// pane.getChildren().add(c);
+				boxList.add(c);
+			}
+		}
+	}
+
+	private int findClickedElement(Point2D p) {
+		for (int i = 0; i < boxList.size(); i++) {
+			if (boxList.get(i).contains(p)) {
+				return -2;
+			}
+		}
+		for (int i = 0; i < symbolList.size(); i++) {
+			if (symbolList.get(i).contains(p)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * 撤销
+	 */
+	@FXML
+	private void undo() {
+		symbolList = caretaker.getUndo();
+		isElectedSymbols = false;
+		pane.getChildren().clear();
+		// pane.getChildren().addAll(boxList);
+		for (Symbol symbol : symbolList) {
+			pane.getChildren().add((Shape) symbol);
+		}
+	}
+
+	/**
+	 * 前进
+	 */
+	@FXML
+	private void redo() {
+		symbolList = caretaker.getRedo();
+		isElectedSymbols = false;
+		pane.getChildren().clear();
+		// pane.getChildren().addAll(boxList);
+		for (Symbol symbol : symbolList) {
+			pane.getChildren().add((Shape) symbol);
+		}
+	}
+
+	/**
+	 * 删除
+	 * @param e
+	 */
+	@FXML
+	private void delete(MouseEvent e) {
+		int index = findClickedElement(new Point2D(e.getX(), e.getY()));
+		symbolList.remove(index);
+		caretaker.add(new Memento(symbolList));
+		pane.getChildren().clear();
+		pane.getChildren().addAll(boxList);
+		for (Symbol symbol : symbolList) {
+			pane.getChildren().add((Shape) symbol);
+
+		}
 	}
 }
