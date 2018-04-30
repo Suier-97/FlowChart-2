@@ -1,0 +1,34 @@
+package symbols;
+
+import java.util.ArrayList;
+
+import control.ChooseBox;
+import javafx.geometry.Point2D;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.Light.Point;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
+
+public interface Symbol {
+	//图形类是否被选中
+	boolean isElected();
+	void setElected(boolean isElected);
+	
+	boolean add(Symbol symbol);
+	boolean remove(Symbol symbol);
+	Symbol getSymbol(int index);
+	
+	//获得被选中图形（除直线外）的操作框
+	ChooseBox getcBox();
+	//获得直线的操作框
+	Circle[] getCircles();
+	Symbol clone();
+	public ArrayList<LLine> getInLine();
+	public void setInLine(LLine line);
+	public ArrayList<LLine> getOutLine();
+	public void setOutLine(LLine line);
+	public boolean canAddInLine();
+	public boolean canAddOutLine();
+	boolean contains(Point2D p);
+ }
