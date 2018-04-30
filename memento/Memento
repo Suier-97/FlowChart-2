@@ -1,0 +1,18 @@
+package memento;
+
+import java.util.LinkedList;
+
+import symbols.Symbol;
+
+public class Memento {
+	static LinkedList<Symbol> state;
+	
+	public Memento(LinkedList<Symbol> state) {
+		this.state=state;
+	}
+	
+	public LinkedList<Symbol> getState() {
+		return state;
+	}
+	
+}
