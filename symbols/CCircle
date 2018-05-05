@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import control.ChooseBox;
 
 import javafx.scene.Cursor;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.Light.Point;
 import javafx.scene.paint.Color;
 
@@ -65,7 +66,7 @@ public class CCircle extends Circle implements Symbol {
 		this.setOnMouseExited(e -> {
 			this.setStroke(Color.BLACK);
 			this.setStrokeWidth(1.3);
-		});
+		}); 
 	}
 
 	/**
@@ -279,8 +280,22 @@ public class CCircle extends Circle implements Symbol {
 
 	@Override
 	public Symbol clone() {
-		// TODO Auto-generated method stub
-		return null;
+		CCircle circle=new CCircle(this.getCenterX(), this.getCenterY(), this.getRadius());
+		circle.setCursor(Cursor.HAND);
+		circle.setStroke(Color.BLACK);
+		circle.setFill(Color.WHITE);
+		circle.setStrokeWidth(1.3);
+		circle.showSymbolBorder();
+		circle.setOnMouseClicked(e -> {
+			circle.drawElectBox();
+
+		});
+		circle.setOnMouseDragged(e -> {
+			circle.drawElectBox();
+			circle.setCenterX(e.getX());
+			circle.setCenterY(e.getY());
+		});
+		return circle;
 	}
 
 	@Override
@@ -323,6 +338,64 @@ public class CCircle extends Circle implements Symbol {
 	public Circle[] getCircles() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean isTextFieldIsEleted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setTextFieldIsEleted(boolean textFieldIsEleted) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public TextField getT() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double getX() {
+		return this.getLayoutX();
+	}
+
+	@Override
+	public void setX(double x) {
+		this.setLayoutX(x);
+	}
+
+	@Override
+	public double getY() {
+		return this.getLayoutY();
+	}
+
+	@Override
+	public void setY(double y) {
+		this.setLayoutY(y);
+	}
+
+	@Override
+	public double getWidth() {
+		return this.getRadius();
+	}
+
+	@Override
+	public void setWidth(double width) {
+		this.setRadius(width);
+	}
+
+	@Override
+	public double getHeight() {
+		return this.getRadius();
+	}
+
+	@Override
+	public void setHeight(double height) {
+		this.setRadius(height);
 	}
 
 }
