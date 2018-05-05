@@ -7,6 +7,7 @@ import java.util.Collections;
 
 import control.ChooseBox;
 import javafx.scene.Cursor;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.Light.Point;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -38,13 +39,16 @@ import javafx.scene.shape.MoveTo;;
 
 public class CurveRectangle extends Path implements Symbol {
 	private boolean isElected = false; // 选中状态，默认没被选中
-	private Text text; // 文本框
+	private Text text=new Text(""); // 文本框
+	private boolean TextFieldIsEleted = false;
+	private double WidthOfText = 0;// 该值记录文本 宽度，用于文本居中
 	private double x = 0;
 	private double y = 0;
 	private double height = 0;
 	private double width = 0;
 	private ChooseBox cBox = new ChooseBox();
-
+	private ArrayList<LLine> lines = new ArrayList<>();
+	
 	/**
 	 * 
 	 * 私有函数，初始化图形的属性
@@ -63,17 +67,28 @@ public class CurveRectangle extends Path implements Symbol {
 
 		this.setFill(Color.WHITE);
 		this.showSymbolBorder();
+		this.updateText();
 		this.setOnMouseClicked(e -> {
 			drawElectBox();
+			this.updateText();
 		});
 		this.setOnMouseDragged(e -> {
 			drawElectBox();
 			x = e.getX() - width / 2;
 			y = e.getY() + height / 2;
 			updatePath();
+			this.updateText();
 		});
 	}
-
+	
+	//更新Text的位置
+		private void updateText() {
+			text.setVisible(false);
+			this.text.setLayoutX(this.getX()+40);
+			this.text.setLayoutY(this.getY()+40);
+			text.setVisible(true);
+		}
+		
 	/**
 	 *
 	 * 鼠标进入图形内时，显示图形边界
@@ -135,7 +150,7 @@ public class CurveRectangle extends Path implements Symbol {
 
 	}
 
-	//画出操作框
+	// 画出操作框
 	private void drawElectBox() {
 		this.isElected = true;
 		Circle circles[] = this.cBox.getCircles();
@@ -291,8 +306,27 @@ public class CurveRectangle extends Path implements Symbol {
 
 	@Override
 	public Symbol clone() {
-		// TODO Auto-generated method stub
-		return null;
+		CurveRectangle cr = new CurveRectangle(x, y, width, height);
+		cr.updatePath();
+
+		cr.setStrokeWidth(1.3);
+
+		cr.setCursor(Cursor.HAND);
+
+		cr.setStroke(Color.BLACK);
+
+		cr.setFill(Color.WHITE);
+		cr.showSymbolBorder();
+		cr.setOnMouseClicked(e -> {
+			cr.drawElectBox();
+		});
+		cr.setOnMouseDragged(e -> {
+			cr.drawElectBox();
+			cr.setX(e.getX() - cr.getWidth() / 2);
+			cr.setY(e.getY() + cr.getHeight() / 2);
+			cr.updatePath();
+		});
+		return cr;
 	}
 
 	@Override
@@ -335,6 +369,32 @@ public class CurveRectangle extends Path implements Symbol {
 	public Circle[] getCircles() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public boolean isTextFieldIsEleted() {
+		return TextFieldIsEleted;
+	}
+
+	public void setTextFieldIsEleted(boolean textFieldIsEleted) {
+		TextFieldIsEleted = textFieldIsEleted;
+	}
+
+	@Override
+	public TextField getT() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Text getText() {
+
+		return text;
+
+	}
+
+	public void setText(Text text) {
+
+		this.text = text;
+
 	}
 
 }
