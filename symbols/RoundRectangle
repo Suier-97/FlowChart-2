@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import control.ChooseBox;
 import javafx.scene.Cursor;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.Light.Point;
 import javafx.scene.layout.Pane;
 
@@ -25,16 +26,18 @@ public class RoundRectangle extends Rectangle implements Symbol {
 
 	private boolean isElected = false;// 选中状态，默认没被选中
 
-	private Text text; // 文本框
-
-	private int type; // 图形类型
+	private Text text=new Text(""); // 文本框
+	private boolean TextFieldIsEleted = false;
+	private double WidthOfText = 0;// 该值记录文本 宽度，用于文本居中
 
 	private ChooseBox cBox = new ChooseBox();
 
+	private ArrayList<LLine> lines = new ArrayList<>();
 	/**
 	 * 
 	 * 私有函数，初始化图形的属性
 	 * 
+	 *
 	 */
 	private void initialize() {
 		this.setArcHeight(15);
@@ -43,18 +46,29 @@ public class RoundRectangle extends Rectangle implements Symbol {
 		this.setStroke(Color.BLACK);
 		this.setFill(Color.WHITE);
 		this.setStrokeWidth(1.3);
+		
 		this.showSymbolBorder();
+		this.updateText();
 		this.setOnMouseClicked(e -> {
-			this.isElected = true;
 			drawElectBox();
+			this.updateText();
 		});
 		this.setOnMouseDragged(e -> {
 			drawElectBox();
 			this.setX(e.getX() - this.getWidth() / 2);
 			this.setY(e.getY() - this.getHeight() / 2);
+			this.updateText();
 		});
 	}
 
+	//更新Text的位置
+		private void updateText() {
+			text.setVisible(false);
+			this.text.setLayoutX(this.getX()+40);
+			this.text.setLayoutY(this.getY()+40);
+			text.setVisible(true);
+		}
+		
 	/**
 	 *
 	 * 鼠标进入图形内时，显示图形边界
@@ -279,17 +293,6 @@ public class RoundRectangle extends Rectangle implements Symbol {
 
 	}
 
-	public int getType() {
-
-		return type;
-
-	}
-
-	public void setType(int type) {
-
-		this.type = type;
-
-	}
 
 	public ChooseBox getcBox() {
 		return cBox;
@@ -315,8 +318,25 @@ public class RoundRectangle extends Rectangle implements Symbol {
 
 	@Override
 	public Symbol clone() {
-		// TODO Auto-generated method stub
-		return null;
+		RoundRectangle roundRect=new RoundRectangle(this.getX(),this.getY(),this.getWidth(),this.getHeight());
+		roundRect.setArcHeight(15);
+		roundRect.setArcWidth(15);
+		roundRect.setCursor(Cursor.HAND);
+		roundRect.setStroke(Color.BLACK);
+		roundRect.setFill(Color.WHITE);
+		roundRect.setStrokeWidth(1.3);
+		roundRect.showSymbolBorder();
+		roundRect.setOnMouseClicked(e -> {
+			roundRect.isElected = true;
+			roundRect.drawElectBox();
+		});
+		roundRect.setOnMouseDragged(e -> {
+			roundRect.drawElectBox();
+			roundRect.setX(e.getX() - roundRect.getWidth() / 2);
+			roundRect.setY(e.getY() - roundRect.getHeight() / 2);
+		});
+		
+		return roundRect;
 	}
 
 	@Override
@@ -358,6 +378,21 @@ public class RoundRectangle extends Rectangle implements Symbol {
 	@Override
 	public Circle[] getCircles() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isTextFieldIsEleted() {	
+		return this.TextFieldIsEleted;
+	}
+
+	@Override
+	public void setTextFieldIsEleted(boolean textFieldIsEleted) {
+		this.TextFieldIsEleted=textFieldIsEleted;
+	}
+
+	@Override
+	public TextField getT() {
 		return null;
 	}
 
