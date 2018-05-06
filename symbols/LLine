@@ -1,441 +1,274 @@
 package symbols;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.sun.javafx.tk.Toolkit;
+
 import control.ChooseBox;
-
+import control.MyUtil;
 import javafx.scene.Cursor;
-
 import javafx.scene.control.TextField;
-
 import javafx.scene.effect.Light.Point;
-
-import javafx.scene.layout.Pane;
-
+import javafx.scene.input.Dragboard;
 import javafx.scene.paint.Color;
-
-import javafx.scene.Cursor;
-
-import javafx.scene.layout.Pane;
-
-import javafx.scene.paint.Color;
-
-import javafx.scene.paint.Paint;
-
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.LineTo;
 
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.MoveTo;
 
+import javafx.scene.shape.Path;
+
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
-
 import javafx.scene.text.Text;
 
-public class RoundRectangle extends Rectangle implements Symbol {
+/**
+ * 
+ * LLine类
+ * 
+ * 
+ * 
+ * @author suisui
+ *
+ * 
+ * 
+ */
 
-	private boolean isElected = false;// 选中状态，默认没被选中
-
-	private Text text = new Text(""); // 文本框
-
-	private boolean TextFieldIsEleted = false;
-
-	private ChooseBox cBox = new ChooseBox();
-
-	private ArrayList<LLine> lines = new ArrayList<>();
+public class LLine extends Path implements Symbol, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5579908370661051831L;
+	private boolean isElected = false; // 选中状态，默认没被选中
+	transient private Text text = new Text(""); // 文本框
+	private double startX = 0;
+	private double startY = 0;
+	private double endX = 0;
+	private double endY = 0;
+	private double length;
+	private boolean withArrow = false;// 直线是否带箭头，默认为false；
+	transient private Circle cBox[] = new Circle[2];
+	
+	private Symbol startSymbol;		//线所指的开始图形节点
+	private Symbol endSymbol;	//线所指的结束图形节点
+	
+	private ArrayList<LLine> lines=new ArrayList<LLine>();
+	private final double OFFSET = 10;
+	{
+		for (int i = 0; i < cBox.length; i++) {
+			cBox[i] = new Circle();
+		}
+	}
 
 	/**
 	 * 
-	 * 
-	 * 
 	 * 私有函数，初始化图形的属性
-	 * 
-	 *
-	 * 
-	 * 
 	 * 
 	 */
 
 	private void initialize() {
-
-		this.setArcHeight(15);
-
-		this.setArcWidth(15);
-
-		this.setCursor(Cursor.HAND);
-
-		this.setStroke(Color.BLACK);
-
-		this.setFill(Color.WHITE);
-
+		updatePath();
 		this.setStrokeWidth(1.3);
-
+		this.setCursor(Cursor.HAND);
+		this.setStroke(Color.BLACK);
+		this.setFill(Color.BLACK);
 		this.showSymbolBorder();
-
 		this.updateText();
-
 		this.setOnMouseClicked(e -> {
-
 			drawElectBox();
-
 			this.updateText();
-
 		});
 
 		this.setOnMouseDragged(e -> {
-
 			drawElectBox();
-
-			this.setX(e.getX() - this.getWidth() / 2);
-
-			this.setY(e.getY() - this.getHeight() / 2);
-
-			this.updateText();
-
+			double x = (startX + endX) / 2;
+			double y = (startY + endY) / 2;
+			startX += e.getX() - x;
+			startY += e.getY() - y;
+			endX += e.getX() - x;
+			endY += e.getY() - y;
+			updatePath();
 		});
-
 	}
-
-	// 更新Text的位置
 
 	private void updateText() {
-
 		text.setVisible(false);
-
-		this.text.setLayoutX(this.getX() + 40);
-
-		this.text.setLayoutY(this.getY() + 40);
-
+		this.setTextCentered();
 		text.setVisible(true);
-		setTextCentered();
-
 	}
 
 	/**
-	 *
-	 * 
-	 * 
-	 * 鼠标进入图形内时，显示图形边界
-	 * 
+	 * 鼠标进入图形内边框变红
 	 */
-
 	private void showSymbolBorder() {
-
 		this.setOnMouseEntered(e -> {
-
 			this.setStroke(Color.DARKRED);
-
 			this.setStrokeWidth(2.0);
-
 		});
-
 		this.setOnMouseExited(e -> {
-
 			this.setStroke(Color.BLACK);
-
 			this.setStrokeWidth(1.3);
-
 		});
-
 	}
-
-	// 画出判断框
 
 	private void drawElectBox() {
-
-		isElected = true;
-
-		Circle circles[] = cBox.getCircles();
-
-		circles[0].setOnMouseDragged(e -> {
-
-			if (e.getX() < circles[7].getCenterX()) {
-
-				this.setWidth(circles[0].getCenterX() - e.getX() + this.getWidth());
-
-				this.setX(e.getX() - circles[0].getCenterX() + this.getX());
-
-			}
-
-			if (e.getY() < circles[7].getCenterY()) {
-
-				this.setY(e.getY() - circles[0].getCenterY() + this.getY());
-
-				this.setHeight(circles[0].getCenterY() - e.getY() + this.getHeight());
-
-			}
-
-			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-
+		this.isElected = true;
+		cBox[0].setOnMouseDragged(e -> {
+			this.startX += e.getX() - cBox[0].getCenterX();
+			this.startY += e.getY() - cBox[0].getCenterY();
+			updatePath();
+			draw();
 		});
-
-		circles[1].setOnMouseDragged(e -> {
-
-			if (e.getY() < circles[6].getCenterY()) {
-
-				this.setY(e.getY() - circles[1].getCenterY() + this.getY());
-
-				this.setHeight(circles[1].getCenterY() - e.getY() + this.getHeight());
-
-			}
-
-			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-
+		cBox[1].setOnMouseDragged(e -> {
+			this.endX += e.getX() - cBox[1].getCenterX();
+			this.endY += e.getY() - cBox[1].getCenterY();
+			updatePath();
+			draw();
 		});
+		draw();
+	}
 
-		circles[2].setOnMouseDragged(e -> {
+	private void draw() {
+		for (int i = 0; i < cBox.length; i++) {
+			cBox[i].setRadius(OFFSET / 2);
+			cBox[i].setFill(Color.WHITE);
+			cBox[i].setStroke(Color.BLACK);
+		}
+		if (endX > startX) {
+			cBox[0].setCenterX(startX - OFFSET);
+			cBox[1].setCenterX(endX + OFFSET);
+		} else {
+			cBox[0].setCenterX(startX + OFFSET);
+			cBox[1].setCenterX(endX - OFFSET);
+		}
+		if (endY > startY) {
+			cBox[0].setCenterY(startY - OFFSET);
+			cBox[1].setCenterY(endY + OFFSET);
+		} else {
+			cBox[0].setCenterY(startY + OFFSET);
+			cBox[1].setCenterY(endY - OFFSET);
+		}
+	}
 
-			if (e.getX() > circles[5].getCenterX()) {
+	// 画没有箭头的直线
+	private void drawLine() {
+		this.getElements().clear();
+		MoveTo start = new MoveTo(startX, startY);
+		LineTo line1 = new LineTo(endX, endY);
+		this.getElements().addAll(start, line1);
+	}
 
-				this.setWidth(e.getX() - circles[2].getCenterX() + this.getWidth());
+	// 画带箭头的直线
+	private void drawLineArrow() {
+		this.getElements().clear();
+		double H = 10; // 箭头高度
+		double L = 4; // 底边的一半
+		int x3 = 0;
+		int y3 = 0;
+		int x4 = 0;
+		int y4 = 0;
+		double awrad = Math.atan(L / H); // 箭头角度
+		double awraLen = Math.sqrt(L * L + H * H); // 箭头的长度
+		double[] arrXY_1 = rotateVec(endX - startX, endY - startY, awrad, true, awraLen);
+		double[] arrXY_2 = rotateVec(endX - startX, endY - startY, -awrad, true, awraLen);
+		double x_3 = endX - arrXY_1[0]; // (x3,y3)是第一端点
+		double y_3 = endY - arrXY_1[1];
+		double x_4 = endX - arrXY_2[0]; // (x4,y4)是第二端点
+		double y_4 = endY - arrXY_2[1];
+		Double X3 = new Double(x_3);
+		x3 = X3.intValue();
+		Double Y3 = new Double(y_3);
+		y3 = Y3.intValue();
+		Double X4 = new Double(x_4);
+		x4 = X4.intValue();
+		Double Y4 = new Double(y_4);
+		y4 = Y4.intValue();
+		MoveTo start = new MoveTo(startX, startY);
+		LineTo line1 = new LineTo(endX, endY);
+		LineTo line2 = new LineTo(x3, y3);
+		LineTo line3 = new LineTo(x4, y4);
+		LineTo line4 = new LineTo(endX, endY);
+		this.getElements().addAll(start, line1, line2, line3, line4);
+	}
 
-			}
+	private void updatePath() {
+		if (withArrow) {
+			drawLineArrow();
+		}else {
+			drawLine();
+		}
+	}
 
-			if (e.getY() < circles[5].getCenterY()) {
+	// 计算
 
-				this.setY(e.getY() - circles[2].getCenterY() + this.getY());
+	private double[] rotateVec(double px, double py, double angle, boolean isChLen, double newLen) {
 
-				this.setHeight(circles[2].getCenterY() - e.getY() + this.getHeight());
+		// 矢量旋转函数，参数含义分别是x分量、y分量、旋转角、是否改变长度、新长度
 
-			}
+		double mathstr[] = new double[2];
 
-			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		// 计算完成后的(vx,vy)
 
-		});
+		double vx = px * Math.cos(angle) - py * Math.sin(angle);
 
-		circles[3].setOnMouseDragged(e -> {
+		double vy = px * Math.sin(angle) + py * Math.cos(angle);
 
-			if (e.getX() < circles[2].getCenterX()) {
+		if (isChLen) {
 
-				this.setWidth(circles[3].getCenterX() - e.getX() + this.getWidth());
+			double d = Math.sqrt(vx * vx + vy * vy);
 
-				this.setX(e.getX() - circles[3].getCenterX() + this.getX());
+			vx = vx / d * newLen;
 
-			}
+			vy = vy / d * newLen;
 
-			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+			mathstr[0] = vx;
 
-		});
+			mathstr[1] = vy;
 
-		circles[4].setOnMouseDragged(e -> {
+		}
 
-			if (e.getX() > circles[3].getCenterX()) {
-
-				this.setWidth(e.getX() - circles[4].getCenterX() + this.getWidth());
-
-			}
-
-			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-
-		});
-
-		circles[5].setOnMouseDragged(e -> {
-
-			if (e.getX() < circles[2].getCenterX()) {
-
-				this.setX(e.getX() - circles[5].getCenterX() + this.getX());
-
-				this.setWidth(circles[5].getCenterX() - e.getX() + this.getWidth());
-
-			}
-
-			if (e.getY() > circles[2].getCenterY()) {
-
-				this.setHeight(e.getY() - circles[5].getCenterY() + this.getHeight());
-
-			}
-
-			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-
-		});
-
-		circles[6].setOnMouseDragged(e -> {
-
-			if (e.getY() > circles[1].getCenterY()) {
-
-				this.setHeight(e.getY() - circles[6].getCenterY() + this.getHeight());
-
-			}
-
-			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-
-		});
-
-		circles[7].setOnMouseDragged(e -> {
-
-			if (e.getX() > circles[0].getCenterX()) {
-
-				this.setWidth(e.getX() - circles[7].getCenterX() + this.getWidth());
-
-			}
-
-			if (e.getY() > circles[0].getCenterY()) {
-
-				this.setHeight(e.getY() - circles[7].getCenterY() + this.getHeight());
-
-			}
-
-			cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-
-		});
-
-		cBox.draw(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		return mathstr;
 
 	}
 
 	/**
 	 * 
-	 * 
-	 * 
-	 * RoundRectangle构造方法
-	 * 
-	 * 
-	 * 
-	 */
-
-	public RoundRectangle() {
-
-		super();
-
-		initialize();
-
-	}
-
-	/**
+	 * LLine构造函数
 	 * 
 	 * 
 	 * 
-	 * RoundRectangle构造方法
+	 * @param startX
 	 * 
+	 *            直线开始的x坐标
 	 * 
+	 * @param startY
 	 * 
+	 *            直线开始的y坐标
 	 * 
+	 * @param endX
 	 * 
+	 *            直线结束的x坐标
 	 * 
+	 * @param endY
 	 * 
-	 * @param width
-	 * 
-	 * 
-	 * 
-	 *            圆角矩形的宽
-	 * 
-	 * 
-	 * 
-	 * @param height
-	 * 
-	 * 
-	 * 
-	 *            圆角矩形的长
-	 * 
-	 * 
+	 *            直线结束的y坐标
 	 * 
 	 */
 
-	public RoundRectangle(double width, double height) {
+	public LLine(double startX, double startY, double endX, double endY) {
 
-		super(width, height);
+		this.startX = startX;
 
-		initialize();
+		this.startY = startY;
 
-	}
+		this.endX = endX;
 
-	/**
-	 * 
-	 * 
-	 * 
-	 * RoundRectangle构造方法
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param x
-	 * 
-	 * 
-	 * 
-	 *            圆角矩形左上角的x坐标
-	 * 
-	 * 
-	 * 
-	 * @param y
-	 * 
-	 * 
-	 * 
-	 *            圆角矩形左上角的y坐标
-	 * 
-	 * 
-	 * 
-	 * @param width
-	 * 
-	 * 
-	 * 
-	 *            圆角矩形的宽
-	 * 
-	 * 
-	 * 
-	 * @param height
-	 * 
-	 * 
-	 * 
-	 *            圆角矩形的长
-	 * 
-	 * 
-	 * 
-	 */
+		this.endY = endY;
 
-	public RoundRectangle(double x, double y, double width, double height) {
+		this.length = Math.sqrt((startY - startX) * (startY - startX) + (endX - endY) * (endX - endY));
 
-		super(x, y, width, height);
-
-		initialize();
-
-	}
-
-	/**
-	 * 
-	 * 
-	 * 
-	 * RoundRectangle构造方法
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param width
-	 * 
-	 * 
-	 * 
-	 *            矩形的宽
-	 * 
-	 * 
-	 * 
-	 * @param height
-	 * 
-	 * 
-	 * 
-	 *            矩形的长
-	 * 
-	 * 
-	 * 
-	 * @param text
-	 * 
-	 * 
-	 * 
-	 *            文本框
-	 * 
-	 * 
-	 * 
-	 */
-
-	public RoundRectangle(double width, double height, Text text) {
-
-		this(width, height);
-
-		this.text = text;
-
-		initialize();
+		this.initialize();
 
 	}
 
@@ -460,186 +293,246 @@ public class RoundRectangle extends Rectangle implements Symbol {
 	}
 
 	public void setText(Text text) {
-
 		this.text = text;
 		setTextCentered();
 	}
 
 	private void setTextCentered() {
-
-		double textWidth = com.sun.javafx.tk.Toolkit.getToolkit().getFontLoader().computeStringWidth(text.getText(),
-				text.getFont());
-
-		text.setLayoutX(this.getX() + this.getWidth() / 2 - textWidth / 2);
-		text.setLayoutY(this.getY() + this.getHeight() / 2 + 5);
+		double textWidth = Toolkit.getToolkit().getFontLoader().computeStringWidth(text.getText(), text.getFont());
+		text.setLayoutX(this.getX() - textWidth / 2);
+		text.setLayoutY(this.getY() + 5);
 	}
 
-	public ChooseBox getcBox() {
+	public double getStartX() {
 
-		return cBox;
+		return startX;
+
+	}
+
+	public void setStartX(double startX) {
+
+		this.startX = startX;
+
+	}
+
+	public double getStartY() {
+
+		return startY;
+
+	}
+
+	public void setStartY(double startY) {
+
+		this.startY = startY;
+
+	}
+
+	public double getEndX() {
+
+		return endX;
+
+	}
+
+	public void setEndX(double endX) {
+
+		this.endX = endX;
+
+	}
+
+	public double getEndY() {
+
+		return endY;
+
+	}
+
+	public void setEndY(double endY) {
+
+		this.endY = endY;
+
+	}
+
+	public double getLength() {
+
+		return length;
+
+	}
+
+	public void setLength(double length) {
+
+		this.length = length;
 
 	}
 
 	@Override
-
 	public boolean add(Symbol symbol) {
-
 		// TODO Auto-generated method stub
-
 		return false;
-
 	}
 
 	@Override
-
 	public boolean remove(Symbol symbol) {
-
 		// TODO Auto-generated method stub
-
 		return false;
-
 	}
 
 	@Override
-
 	public Symbol getSymbol(int index) {
-
 		// TODO Auto-generated method stub
-
 		return null;
-
 	}
 
 	@Override
+	public ChooseBox getcBox() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	// @Override
+	// public Symbol clone() {
+	// LLine l=new LLine(startX, startY, endX, endY);
+	// l.updatePath();
+	// l.setStrokeWidth(1.3);
+	// l.setCursor(Cursor.HAND);
+	// l.setStroke(Color.BLACK);
+	// l.setFill(Color.BLACK);
+	// l.showSymbolBorder();
+	// l.setOnMouseClicked(e -> {
+	// l.drawElectBox();
+	// });
+	// l.setOnMouseDragged(e -> {
+	// l.drawElectBox();
+	// double x = (l.getStartX()+l.getEndX()) / 2;
+	// double y = (l.getStartY() + l.getEndY()) / 2;
+	// l.setStartX(l.getStartX()+e.getX()-x);
+	// l.setStartY(l.getStartY()+e.getY()-y);
+	// l.setEndX(l.getEndX()+e.getX()-x);
+	// l.setEndY(l.getEndY()+e.getY()-y);
+	//
+	// l.updatePath();
+	//
+	// });
+	// return l;
+	// }
 	public Symbol clone() {
-
-		RoundRectangle roundRect = new RoundRectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-
-		roundRect.setArcHeight(15);
-
-		roundRect.setArcWidth(15);
-
-		roundRect.setCursor(Cursor.HAND);
-
-		roundRect.setStroke(Color.BLACK);
-
-		roundRect.setFill(Color.WHITE);
-
-		roundRect.setStrokeWidth(1.3);
-
-		roundRect.showSymbolBorder();
-
-		roundRect.setOnMouseClicked(e -> {
-
-			roundRect.isElected = true;
-
-			roundRect.drawElectBox();
-
-		});
-
-		roundRect.setOnMouseDragged(e -> {
-
-			roundRect.drawElectBox();
-
-			roundRect.setX(e.getX() - roundRect.getWidth() / 2);
-
-			roundRect.setY(e.getY() - roundRect.getHeight() / 2);
-
-		});
-
-		return roundRect;
-
+		try {
+			return MyUtil.clone(this);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
-
 	public ArrayList<LLine> getInLine() {
-
 		// TODO Auto-generated method stub
-
 		return null;
-
 	}
 
 	@Override
-
 	public void setInLine(LLine line) {
-
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-
 	public ArrayList<LLine> getOutLine() {
-
 		// TODO Auto-generated method stub
-
 		return null;
-
 	}
 
 	@Override
-
 	public void setOutLine(LLine line) {
-
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-
 	public boolean canAddInLine() {
-
 		// TODO Auto-generated method stub
-
 		return false;
-
 	}
 
 	@Override
-
 	public boolean canAddOutLine() {
-
 		// TODO Auto-generated method stub
-
 		return false;
-
 	}
 
 	@Override
-
 	public Circle[] getCircles() {
+		return this.cBox;
+	}
 
+	@Override
+	public boolean isTextFieldIsEleted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setTextFieldIsEleted(boolean textFieldIsEleted) {
 		// TODO Auto-generated method stub
 
-		return null;
-
 	}
 
 	@Override
-
-	public boolean isTextFieldIsEleted() {
-
-		return this.TextFieldIsEleted;
-
-	}
-
-	@Override
-
-	public void setTextFieldIsEleted(boolean textFieldIsEleted) {
-
-		this.TextFieldIsEleted = textFieldIsEleted;
-
-	}
-
-	@Override
-
 	public TextField getT() {
-
+		// TODO Auto-generated method stub
 		return null;
+	}
 
+	@Override
+	public double getX() {
+		return this.startX;
+	}
+
+	@Override
+	public void setX(double x) {
+		this.setStartX(x);
+	}
+
+	@Override
+	public double getY() {
+		return this.getStartY();
+	}
+
+	@Override
+	public void setY(double y) {
+		this.setStartX(y);
+	}
+
+	@Override
+	public double getWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setWidth(double width) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double getHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setHeight(double height) {
+		// TODO Auto-generated method stub
+
+	}
+	@Override
+	public ArrayList<LLine> getLines() {
+		return this.lines;
+	}
+
+	@Override
+	public void setLines(ArrayList<LLine> lines) {
+		this.lines=lines;
 	}
 
 }
