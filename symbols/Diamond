@@ -2,12 +2,13 @@ package symbols;
 
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.sun.javafx.tk.Toolkit;
 
 import control.ChooseBox;
-
+import control.MyUtil;
 import javafx.scene.Cursor;
 
 import javafx.scene.control.ChoiceBox;
@@ -60,11 +61,16 @@ import javafx.scene.text.Text;
 
 
 
-public class Diamond extends Polygon implements Symbol {
+public class Diamond extends Polygon implements Symbol,Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8308985132401445009L;
 
 	private boolean isElected = false; // 选中状态，默认没被选中
 
-	private Text text = new Text(""); // 文本框
+	transient private Text text = new Text(""); // 文本框
 
 	private boolean TextFieldIsEleted = false;
 
@@ -153,14 +159,8 @@ public class Diamond extends Polygon implements Symbol {
 	private void updateText() {
 
 		text.setVisible(false);
-
-		this.text.setLayoutX(this.getX() + 40);
-
-		this.text.setLayoutY(this.getY() + 40);
-
-		text.setVisible(true);
 		setTextCencered();
-		
+		text.setVisible(true);
 
 	}
 
@@ -743,50 +743,59 @@ public class Diamond extends Polygon implements Symbol {
 
 
 
-	@Override
-
+//	@Override
+//
+//	public Symbol clone() {
+//
+//		Diamond d = new Diamond(x, y, width, height);
+//
+//		d.updatePoints();
+//
+//		d.setCursor(Cursor.HAND);
+//
+//		d.setStroke(Color.BLACK);
+//
+//		d.setFill(Color.WHITE);
+//
+//		d.setStrokeWidth(1.3);
+//
+//		d.showSymbolBorder();
+//
+//		d.setOnMouseClicked(e -> {
+//
+//			d.drawElectBox();
+//
+//		});
+//
+//		d.setOnMouseDragged(e -> {
+//
+//			d.setX(e.getX() - d.getWidth() / 2);
+//
+//			d.setY(e.getY());
+//
+//			d.updatePoints();
+//
+//			d.drawElectBox();
+//
+//			d.getPoints().addAll(points);
+//
+//
+//
+//		});
+//
+//
+//
+//		return d;
+//
+//	}
 	public Symbol clone() {
-
-		Diamond d = new Diamond(x, y, width, height);
-
-		d.updatePoints();
-
-		d.setCursor(Cursor.HAND);
-
-		d.setStroke(Color.BLACK);
-
-		d.setFill(Color.WHITE);
-
-		d.setStrokeWidth(1.3);
-
-		d.showSymbolBorder();
-
-		d.setOnMouseClicked(e -> {
-
-			d.drawElectBox();
-
-		});
-
-		d.setOnMouseDragged(e -> {
-
-			d.setX(e.getX() - d.getWidth() / 2);
-
-			d.setY(e.getY());
-
-			d.updatePoints();
-
-			d.drawElectBox();
-
-			d.getPoints().addAll(points);
-
-
-
-		});
-
-
-
-		return d;
-
+		try {
+			return MyUtil.clone(this);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 
@@ -901,6 +910,14 @@ public class Diamond extends Polygon implements Symbol {
 
 	}
 
+	@Override
+	public ArrayList<LLine> getLines() {
+		return this.lines;
+	}
 
+	@Override
+	public void setLines(ArrayList<LLine> lines) {
+		this.lines=lines;
+	}
 
 }
