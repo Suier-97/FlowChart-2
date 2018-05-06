@@ -1,9 +1,10 @@
 package symbols;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import control.ChooseBox;
-
+import control.MyUtil;
 import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Light.Point;
@@ -25,12 +26,19 @@ import javafx.scene.text.Text;
  * 
  */
 
-public class CCircle extends Circle implements Symbol {
+public class CCircle extends Circle implements Symbol,Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6856048953730420051L;
+	/**
+	 * 
+	 */
 	private boolean isElected = false; // 选中状态，默认没被选中
-	private Text text; // 文本框
+	transient private Text text=new Text(""); // 文本框
 	private ChooseBox cBox = new ChooseBox();
-
+	private ArrayList<LLine> lines=new ArrayList<LLine>();
 	/**
 	 * 
 	 * 私有函数，初始化图形的属性
@@ -278,24 +286,33 @@ public class CCircle extends Circle implements Symbol {
 		return null;
 	}
 
-	@Override
+//	@Override
+//	public Symbol clone() {
+//		CCircle circle=new CCircle(this.getCenterX(), this.getCenterY(), this.getRadius());
+//		circle.setCursor(Cursor.HAND);
+//		circle.setStroke(Color.BLACK);
+//		circle.setFill(Color.WHITE);
+//		circle.setStrokeWidth(1.3);
+//		circle.showSymbolBorder();
+//		circle.setOnMouseClicked(e -> {
+//			circle.drawElectBox();
+//
+//		});
+//		circle.setOnMouseDragged(e -> {
+//			circle.drawElectBox();
+//			circle.setCenterX(e.getX());
+//			circle.setCenterY(e.getY());
+//		});
+//		return circle;
+//	}
 	public Symbol clone() {
-		CCircle circle=new CCircle(this.getCenterX(), this.getCenterY(), this.getRadius());
-		circle.setCursor(Cursor.HAND);
-		circle.setStroke(Color.BLACK);
-		circle.setFill(Color.WHITE);
-		circle.setStrokeWidth(1.3);
-		circle.showSymbolBorder();
-		circle.setOnMouseClicked(e -> {
-			circle.drawElectBox();
-
-		});
-		circle.setOnMouseDragged(e -> {
-			circle.drawElectBox();
-			circle.setCenterX(e.getX());
-			circle.setCenterY(e.getY());
-		});
-		return circle;
+		try {
+			return MyUtil.clone(this);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -348,7 +365,6 @@ public class CCircle extends Circle implements Symbol {
 
 	@Override
 	public void setTextFieldIsEleted(boolean textFieldIsEleted) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -396,6 +412,16 @@ public class CCircle extends Circle implements Symbol {
 	@Override
 	public void setHeight(double height) {
 		this.setRadius(height);
+	}
+
+	@Override
+	public ArrayList<LLine> getLines() {
+		return this.lines;
+	}
+
+	@Override
+	public void setLines(ArrayList<LLine> lines) {
+		this.lines=lines;
 	}
 
 }
