@@ -1,12 +1,15 @@
 package symbols;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.sun.javafx.tk.Toolkit;
 
 import control.ChooseBox;
+import control.MyUtil;
 import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -24,12 +27,16 @@ import javafx.scene.text.TextFlow;
  *
  */
 
-public class RRectangle extends Rectangle implements Symbol {
+public class RRectangle extends Rectangle implements Symbol ,Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7640731149146732271L;
 
 	private boolean isElected = false; // 选中状态，默认没被选中
 
-	private Text text = new Text(""); // 文本框
-	private TextFlow t = new TextFlow();
+	transient private Text text = new Text(""); // 文本框
 
 	private boolean TextFieldIsEleted = false;
 
@@ -39,12 +46,14 @@ public class RRectangle extends Rectangle implements Symbol {
 
 	private ArrayList<LLine> lines = new ArrayList<>();
 
+	private boolean inEnable=true;
+	private boolean outEnable=true;
 	/**
 	 * 
 	 * 
 	 * 私有函数，初始化图形的属性
 	 */
-
+	
 	private void initialize() {
 
 		this.setCursor(Cursor.HAND);
@@ -86,33 +95,28 @@ public class RRectangle extends Rectangle implements Symbol {
 	private void updateText() {
 
 		text.setVisible(false);
-
-		text.setVisible(true);
-		
 		setTextCentered();
-
+		text.setVisible(true);
 	}
 
 	/**
 	 *
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * 鼠标进入图形内时，显示图形边界
-	 * 
-	 * 
 	 * 
 	 */
 
 	private void showSymbolBorder() {
+//		double x=this.getX();
+//		double y=this.getY();
+//		double w=this.getWidth();
+//		double h=this.getHeight();
 
 		this.setOnMouseEntered(e -> {
-
+//			new Circle(x+w/2,y,5).setFill(Color.DARKRED);
+//			new Circle(x+w,y-h/2,5).setFill(Color.DARKRED);
+//			new Circle(x+w/2,y-h,5).setFill(Color.DARKRED);
+//			new Circle(x,y-h/2,5).setFill(Color.DARKRED);
 			this.setStroke(Color.DARKRED);
-
 			this.setStrokeWidth(2.0);
 
 		});
@@ -348,91 +352,27 @@ public class RRectangle extends Rectangle implements Symbol {
 
 	/**
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * RRectangle构造方法
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * 
 	 * 
 	 * @param x
 	 * 
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 *            矩形左上角的x坐标
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * 
 	 * @param y
 	 * 
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 *            矩形左上角的y坐标
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * @param width
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * 
 	 *            矩形的宽
 	 * 
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * @param height
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 *            矩形的长
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * 
 	 */
 
@@ -472,12 +412,9 @@ public class RRectangle extends Rectangle implements Symbol {
 	}
 
 	private void setTextCentered() {
-		
-		double textWidth = com.sun.javafx.tk.Toolkit.getToolkit().getFontLoader().computeStringWidth(text.getText(),
-				text.getFont());
-		
-		text.setLayoutX(this.getX() +this.getWidth()/2- textWidth / 2);
-		text.setLayoutY(this.getY() + this.getHeight() / 2+5);
+		double textWidth = Toolkit.getToolkit().getFontLoader().computeStringWidth(text.getText(), text.getFont());
+		text.setLayoutX(this.getX() + this.getWidth() / 2 - textWidth / 2);
+		text.setLayoutY(this.getY() + this.getHeight() / 2 + 5);
 	}
 
 	public ChooseBox getcBox() {
@@ -516,14 +453,14 @@ public class RRectangle extends Rectangle implements Symbol {
 
 	}
 
-	@Override
-
 	public Symbol clone() {
-
-		// TODO Auto-generated method stub
-
+		try {
+			return MyUtil.clone(this);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
-
 	}
 
 	@Override
