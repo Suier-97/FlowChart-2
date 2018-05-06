@@ -1,9 +1,10 @@
 package symbols;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import control.ChooseBox;
-
+import control.MyUtil;
 import javafx.scene.Cursor;
 
 import javafx.scene.control.TextField;
@@ -30,11 +31,16 @@ import javafx.scene.shape.Shape;
 
 import javafx.scene.text.Text;
 
-public class RoundRectangle extends Rectangle implements Symbol {
+public class RoundRectangle extends Rectangle implements Symbol ,Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8154344449258771157L;
 
 	private boolean isElected = false;// 选中状态，默认没被选中
 
-	private Text text = new Text(""); // 文本框
+	transient private Text text = new Text(""); // 文本框
 
 	private boolean TextFieldIsEleted = false;
 
@@ -99,13 +105,9 @@ public class RoundRectangle extends Rectangle implements Symbol {
 	private void updateText() {
 
 		text.setVisible(false);
-
-		this.text.setLayoutX(this.getX() + 40);
-
-		this.text.setLayoutY(this.getY() + 40);
-
-		text.setVisible(true);
 		setTextCentered();
+		text.setVisible(true);
+		
 
 	}
 
@@ -510,46 +512,55 @@ public class RoundRectangle extends Rectangle implements Symbol {
 
 	}
 
-	@Override
-
+//	@Override
+//
+//	public Symbol clone() {
+//
+//		RoundRectangle roundRect = new RoundRectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+//
+//		roundRect.setArcHeight(15);
+//
+//		roundRect.setArcWidth(15);
+//
+//		roundRect.setCursor(Cursor.HAND);
+//
+//		roundRect.setStroke(Color.BLACK);
+//
+//		roundRect.setFill(Color.WHITE);
+//
+//		roundRect.setStrokeWidth(1.3);
+//
+//		roundRect.showSymbolBorder();
+//
+//		roundRect.setOnMouseClicked(e -> {
+//
+//			roundRect.isElected = true;
+//
+//			roundRect.drawElectBox();
+//
+//		});
+//
+//		roundRect.setOnMouseDragged(e -> {
+//
+//			roundRect.drawElectBox();
+//
+//			roundRect.setX(e.getX() - roundRect.getWidth() / 2);
+//
+//			roundRect.setY(e.getY() - roundRect.getHeight() / 2);
+//
+//		});
+//
+//		return roundRect;
+//
+//	}
 	public Symbol clone() {
-
-		RoundRectangle roundRect = new RoundRectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-
-		roundRect.setArcHeight(15);
-
-		roundRect.setArcWidth(15);
-
-		roundRect.setCursor(Cursor.HAND);
-
-		roundRect.setStroke(Color.BLACK);
-
-		roundRect.setFill(Color.WHITE);
-
-		roundRect.setStrokeWidth(1.3);
-
-		roundRect.showSymbolBorder();
-
-		roundRect.setOnMouseClicked(e -> {
-
-			roundRect.isElected = true;
-
-			roundRect.drawElectBox();
-
-		});
-
-		roundRect.setOnMouseDragged(e -> {
-
-			roundRect.drawElectBox();
-
-			roundRect.setX(e.getX() - roundRect.getWidth() / 2);
-
-			roundRect.setY(e.getY() - roundRect.getHeight() / 2);
-
-		});
-
-		return roundRect;
-
+		try {
+			return MyUtil.clone(this);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -640,6 +651,15 @@ public class RoundRectangle extends Rectangle implements Symbol {
 
 		return null;
 
+	}
+	@Override
+	public ArrayList<LLine> getLines() {
+		return this.lines;
+	}
+
+	@Override
+	public void setLines(ArrayList<LLine> lines) {
+		this.lines=lines;
 	}
 
 }
