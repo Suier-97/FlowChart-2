@@ -1,11 +1,13 @@
 package control;
 
+import java.io.Serializable;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 
-public class ChooseBox extends Shape {
+public class ChooseBox extends Shape implements Serializable{
 	/**
 	 * 选择框主要以矩形呈现
 	 * 
@@ -17,10 +19,10 @@ public class ChooseBox extends Shape {
 	private double cBoxHeight;
 	private double offset = 10;// 偏移量
 
-	private Line cBox[] = new Line[5];
+	transient private Line cBox[] = new Line[5];
 
 	// Pane pane;
-	Circle circles[] = new Circle[9];
+	transient Circle circles[] = new Circle[9];
 
 	public ChooseBox() {
 		// this.pane = pane;
@@ -109,13 +111,16 @@ public class ChooseBox extends Shape {
 		return circles;
 	}
 
-	@Override
-	public com.sun.javafx.geom.Shape impl_configShape() {
-		return null;
-	}
 
 	public double getOffset() {
 		return offset;
 	}
+
+	@Override
+	public com.sun.javafx.geom.Shape impl_configShape() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
